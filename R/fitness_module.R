@@ -443,8 +443,5 @@ if(heatwave_scenario == T) {
 # Time out:
 print(Sys.time() - time0)
 
-# Clean environment:
-# rm(list = ls())
-
 #                                          END OF SCRIPT
 #############################################################################################################

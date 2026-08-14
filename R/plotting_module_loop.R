@@ -1,11 +1,26 @@
+# Script name: fitness module
+#
+#
+# Author: Daniel Ottmann, Oyvind Fiksen & Tom Langbehn
+#
+# Email: daniel.ottmann.riera@gmail.com
+# Email: oyvind.fiksen@uib.no
+# Email: tom.langbehn@uib.no
+#
+# Last update:  August 2026
+#
+# ---------------------------
+#
+# Readme:
+#
+# This script plots annual-integrated survival of bluefin tuna using SST inputs from historic and IPCC projections
+# It loads all the simulations (historic/future and with/without mhw) and generates plots showing interannual changes 
+#
+########################################################################################################################################
 
 
-
-
-
-
-
-# Load temporal outputs:
+##################################################################
+# Load and prepare all the data outputs:
 load("out/loop/fitness_index_permut_2000_1982_2025.RData")
 permutation_list_1982_2025 <- permutation_list
 # Add New column to tables:
@@ -107,18 +122,7 @@ permutation_list_2026_2100_ssp585_MHW <- lapply(
   })
 
 
-
-permutation_list <- c(permutation_list_1982_2025,
-                      permutation_list_1982_2025_projections,
-                      permutation_list_2026_2100_ssp126,
-                      permutation_list_2026_2100_ssp245,
-                      permutation_list_2026_2100_ssp370,
-                      permutation_list_2026_2100_ssp585,
-                      permutation_list_2026_2100_ssp126_MHW,
-                      permutation_list_2026_2100_ssp245_MHW,
-                      permutation_list_2026_2100_ssp370_MHW,
-                      permutation_list_2026_2100_ssp585_MHW)
-
+# Combine the data into a single data frame:
 combined_df <- do.call(
   rbind,
   c(permutation_list_1982_2025,
@@ -133,8 +137,7 @@ combined_df <- do.call(
     permutation_list_2026_2100_ssp585_MHW)
 )
 
-
-
+# Get mean, sd and  se:
 combined_df_averaged <- combined_df %>%
   # mutate(fitness_index = log10(fitness_index)) %>%
   group_by(year, projection) %>%
@@ -171,16 +174,6 @@ combined_df <- all_lists %>%
   }, .id = "list_source")
 
 
-
-
-
-# combined_df <- map2_dfr(permutation_list, seq_along(permutation_list), ~
-#                           mutate(.x, permut_id = .y))
-# 
-# combined_df <- combined_df %>%
-#   arrange(year) %>%
-#   mutate(permut_id_2 = rep(1:27, length(unique(combined_df$year))))
-
 # Change the names of the projections:
 combined_df <- combined_df %>% 
   mutate(projection = case_when(projection == "Historic projections" ~ "Historic regression",
@@ -214,13 +207,10 @@ combined_df_no_mhw <- combined_df %>%
                   color = projection
               ), alpha = .3) +
     scale_color_manual(values = c("lightblue", "black", "olivedrab", "#D4A437","red", "red4"), name = "Projection") +
-    # scale_fill_manual(values = c("gray", "lightblue", "gold", "red")) +
-    scale_linetype_manual(values = c("solid", "dotted", "solid", "solid", "solid", "solid"), name = "Projection") +
-    # scale_y_log10() +
     ylab("Integrated survival") +
     xlab("Year") +
     theme_classic() +
-    facet_wrap(~prey_scalar,
+    facet_wrap(~prey_scalar,                                            # Need to hastag to plot in a single panel
                scales = "free_y",
                labeller = as_labeller(c("1500" = "Very low food",
                                         "2000" = "Low food",
@@ -228,16 +218,14 @@ combined_df_no_mhw <- combined_df %>%
                                         "2500" = "High food",
                                         "3000" = "Very high food")),
                ncol= 1) +
-    # scale_x_discrete(
-    #   breaks = unique(combined_df$year)[seq(1, length(unique(combined_df$year)), by = 2)]) +
     theme(panel.background = element_blank(),
           strip.background = element_blank()))
 
-# ggsave("plots/fitness_index_permut_naup_2000_1982_2100_sm.png", p, height = 40 , width = 80, units = "mm", scale = 2) 
-# ggsave("plots/fitness_index_permut_naup_2000_1982_2100_pannels_sm.png", p, height = 100 , width = 60, units = "mm", scale = 2) 
+ggsave("plots/fitness_index_permut_naup_2000_1982_2100_pannels_sm.png", p, height = 100 , width = 60, units = "mm", scale = 2) 
+# ggsave("plots/fitness_index_permut_naup_2000_1982_2100.png", p, height = 40 , width = 80, units = "mm", scale = 2) 
 
 
-# Filter projections with marine heatwaves:
+# Filter projections with marine heatwaves only:
 combined_df_mhw <- combined_df %>%
   filter(!projection %in% c("SSP126", "SSP245", "SSP370", "SSP585"))
 
@@ -276,8 +264,7 @@ combined_df_mhw <- combined_df %>%
     theme(panel.background = element_blank(),
           strip.background = element_blank()))
 
-# ggsave("plots/fitness_index_permut_naup_2000_1982_2100.png", p, height = 40 , width = 80, units = "mm", scale = 2) 
-# ggsave("plots/fitness_index_permut_naup_2000_1982_2100_pannels_sm_MHW.png", p, height = 100 , width = 60, units = "mm", scale = 2) 
+ggsave("plots/fitness_index_permut_naup_2000_1982_2100_pannels_sm_MHW.png", p, height = 100 , width = 60, units = "mm", scale = 2) 
 
 
 # Filter projections with and without marine heatwaves:
@@ -325,83 +312,7 @@ combined_df_dotted <- combined_df %>%
     theme(panel.background = element_blank(),
           strip.background = element_blank()))
 
-# ggsave("plots/fitness_index_permut_naup_2000_1982_2100.png", p, height = 40 , width = 80, units = "mm", scale = 2) 
-# ggsave("plots/fitness_index_permut_naup_2000_1982_2100_pannels_sm_all.png", p, height = 100 , width = 60, units = "mm", scale = 2) 
+ggsave("plots/fitness_index_permut_naup_2000_1982_2100_pannels_sm_all.png", p, height = 100 , width = 60, units = "mm", scale = 2) 
 
-
-
-# Remove some projections:
-combined_df_simplified <- combined_df %>%
-  filter(prey_scalar != "1500", projection %in% c("Historic", "SSP245", "SSP370", "SSP245_MHW", "SSP370_MHW")) 
-
-
-
-(p <- ggplot() +
-    
-    # geom_ribbon(data = combined_df,
-    #             aes(x = year, y = fitness_mean, ymin = lower_se, ymax = upper_se, fill = projection, alpha = projection)) + # fill = "lightblue"
-    geom_line(data = combined_df_simplified,
-              aes(x = year, y = relative_fitness_index,
-                  group = interaction(prey_scalar, projection), 
-                  linetype = projection, 
-                  color = projection
-              )) +
-    scale_color_manual(values = c("lightblue", "#D4A437", "#D4A437", "red", "red"), name = "Projection") +
-    scale_linetype_manual(values = c("solid", "solid", "dotted", "solid", "dotted"), name = "Projection") +
-    
-    geom_line(data = subset(combined_df_simplified, projection %in% c("SSP245_MHW", "SSP370_MHW")),
-              aes(x = year, y = relative_fitness_index,
-                  group = interaction(prey_scalar, projection), 
-                  color = projection
-              ), alpha = .3) +
-    
-    # scale_y_log10() +
-    ylab("Relative integrated survival") +
-    xlab("Year") +
-    theme_classic() +
-    facet_wrap(~prey_scalar, 
-               scales = "free_y",
-               labeller = as_labeller(c("1500" = "Very low food",
-                                        "2000" = "Low food",
-                                        "2250" = "Moderate food",
-                                        "2500" = "High food",
-                                        "3000" = "Very high food")),
-               ncol= 1) +
-    # scale_x_discrete(
-    #   breaks = unique(combined_df$year)[seq(1, length(unique(combined_df$year)), by = 2)]) +
-    theme(panel.background = element_blank(),
-          strip.background = element_blank()))
-
-# ggsave("plots/fitness_index_permut_naup_2000_1982_2100.png", p, height = 40 , width = 80, units = "mm", scale = 2) 
-# ggsave("plots/fitness_index_permut_naup_2000_1982_2100_pannels.png", p, height = 80 , width = 60, units = "mm", scale = 2) 
-
-
-
-
-
-
-
-
-
-
-
-(p <- ggplot() +
-  # geom_boxplot(data = combined_df_averaged,
-  #            aes(x = as.factor(year), y = fitness_index)) +
-  geom_ribbon(data = combined_df_averaged,
-              aes(x = year, y = fitness_mean, ymin = lower_se, ymax = upper_se, fill = projection, alpha = projection)) + # fill = "lightblue"
-  geom_line(data = combined_df_averaged,
-            aes(x = year, y = fitness_mean, group = projection, linetype = projection, color = projection)) +
-    scale_color_manual(values = c("black", "lightblue4","gold", "red")) +
-    scale_fill_manual(values = c("gray", "lightblue", "gold", "red")) +
-    scale_linetype_manual(values = c("dotted", "solid", "dashed", "dashed")) +
-    scale_alpha_manual(values = c(0.3, 0.7, 0.3, 0.3)) +
-  # scale_y_log10() +
-  ylab("Fitness index") +
-  xlab("Year") +
-  theme_classic() +
-  # scale_x_discrete(
-  #   breaks = unique(combined_df_averaged$year)[seq(1, length(unique(combined_df_averaged$year)), by = 2)]) +
-  theme(panel.background = element_blank()))
-
-# ggsave("plots/fitness_index_permut_naup_2000_mean_se_1982_2100.png", p, height = 40 , width = 80, units = "mm", scale = 2) 
+#           END OF SCRIPT
+#######################################

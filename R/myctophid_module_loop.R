@@ -1,4 +1,3 @@
-
 ## Script name: Myctophid module
 ##
 ##
@@ -6,14 +5,14 @@
 ## Email:  tom.langbehn@uib.no
 ## Email: daniel.ottmann.riera@gmail.com
 ##
-## Date created: August 2021
-## Last update:  March 2022
+## Date created: August 2026
 ##
 ## ---------------------------
 ##
 ## Readme:
 ##
 ## This script models the position and density of myctophids as in relation to light intensity in the water column in an annual cycle 
+## In this study, myctophids have no effect on survival
 ##
 ########################################################################################################################################
 
@@ -21,12 +20,6 @@
 ##################################################################
 # Set time:
 time0 <- Sys.time()
-
-# Set english language:
-# Sys.setlocale("LC_TIME", "English")
-
-# Suppress tidiverse summarise() messages:
-# options(dplyr.summarise.inform = FALSE)
 
 # Create an "those that are not within" function:
 "%ni%" <- Negate("%in%")
@@ -79,7 +72,6 @@ max_myctophid_df <- myctophid_df %>%
   group_by(yday) %>%
   summarise(max_myctophid_overlaping_density = max(myctophid_overlaping_density))
 
-
 # Oufile data:
 save(myctophid_df, file = "data/myctophid_df.RData")
 save(max_myctophid_df, file = "data/max_myctophid_df.RData")
@@ -87,8 +79,6 @@ save(max_myctophid_df, file = "data/max_myctophid_df.RData")
 # Time out:
 print(Sys.time() - time0) 
 
-# Clean environment:
-# rm(list = ls())
 
 #                                          END OF SCRIPT
 #############################################################################################################

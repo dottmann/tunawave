@@ -10,7 +10,7 @@
 ##
 ## Readme:
 ##
-## This script plots survival curves ofbluefin tuna
+## This script plots survival curves of bluefin tuna using averaged daily temperatures observed between 1982-2025
 ##
 ########################################################################################################################################
 

@@ -7,8 +7,7 @@
 # Email: oyvind.fiksen@uib.no
 # Email: tom.langbehn@uib.no
 #
-# Date created: September 2021
-# Last update:  March 2022
+# Last update:  August 2026
 #
 # ---------------------------
 #
@@ -42,7 +41,7 @@ time0 <- Sys.time()
 load("data/myctophid_df.RData")
 load("data/environmental_df.RData")
 
-# Add artificial heat wave:
+# Add artificial heat wave in mid July:
 if(mhw == F) {
   print("Projection without MHW")
 } else {
@@ -439,16 +438,8 @@ master_df <- master_df %>%
 # Outfile master_df and matrices:
 save(master_df, file = paste0("out/loop/master_df_", test_run, ".RData"))
 
-# output_matrices <- list(m_gut_limit = m_gut_limit, m_wgt_mgDW = m_wgt_mgDW, 
-#                         m_growth_mgDW = m_growth_mgDW, m_gut = m_gut, m_fish_age = m_fish_age, 
-#                         m_surv = m_surv, m_fish_sl = m_fish_sl)
-# save(output_matrices, file = paste0("out/loop/output_matrices_", test_run,".RData"))
-
 # Time out:
 print(Sys.time() - time0)
-
-# Clean environment:
-# rm(list = ls())
 
 #                                          END OF SCRIPT
 #############################################################################################################

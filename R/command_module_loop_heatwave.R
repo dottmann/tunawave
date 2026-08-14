@@ -10,7 +10,8 @@
 #
 # Readme:
 #
-# To run different test runs, model parameters described in this scribed need to be edited
+# This script generates simulations where we superpose a marine heatwave on that starts at different times of an "average"
+# To run different test runs, model parameters described in this script need to be edited
 # Edit "food_scalar" and "test_run" for different food scenarios
 # Edit "window_length" for 5 or 10 day heatwaves
 #

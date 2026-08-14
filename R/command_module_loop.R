@@ -15,8 +15,10 @@
 #
 # Test runs:
 #---------------------------------------------------------------------
-# To run different test runs, model parameters described in this script need to be edited
-# Edit "ystart", "yend" to set historic or future projections
+#
+# This script generates annual simulations using SST pf historic and IPCC projection data.
+# To run different test runs, model parameters described in this script need to be edited.
+# Edit "ystart", "yend" to set historic or future projections.
 # For future projections, edit "mhw" to superpose/remove a marine heat wave. 
 #
 # ---------------------------

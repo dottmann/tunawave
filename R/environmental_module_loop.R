@@ -5,7 +5,7 @@
 ## Email:  oyvind.fiksen@uib.no
 ## Email: daniel.ottmann.riera@gmail.com
 ##
-## Last update:  August 2022
+## Last update:  August 2026
 ##
 ## ---------------------------
 ## Readme:
