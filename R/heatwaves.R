@@ -104,15 +104,31 @@ df_hw1 <- df %>%
                               T ~ NA),
          sst_anomaly =  case_when(mhw_category == 1 ~ sst_anomaly,
                                   T ~ NA))
+
 df_hw2 <- df %>%
-  mutate(mean_sst = case_when(mhw_category == 2 ~ mean_sst,
+  group_by(year) %>%
+  mutate(
+    keep = mhw_category == 2 |
+      lag(mhw_category == 2, default = FALSE) |
+      lead(mhw_category == 2, default = FALSE)
+  ) %>%
+  mutate(
+    mean_sst = if_else(keep, mean_sst, NA_real_),
+    sst_anomaly = if_else(keep, sst_anomaly, NA_real_)
+  ) %>%
+  dplyr::select(-keep) %>%
+  ungroup()
+
+
+df_hw3 <- df %>%
+  mutate(mean_sst = case_when(mhw_category == 3 ~ mean_sst,
                               T ~ NA),
-         sst_anomaly =  case_when(mhw_category == 2 ~ sst_anomaly,
+         sst_anomaly =  case_when(mhw_category == 3 ~ sst_anomaly,
                                   T ~ NA))
 
 
 # Plot it out:
-my_palette <- c("gray", "#FF3333", "#990000")
+my_palette <- c("gray", "#FF3333", "#990000", "black")
 ymax_sst = max(df$mean_sst)
 ymin_sst = min(df$mean_sst)
 ymax_anom = max(df$sst_anomaly)
@@ -184,6 +200,8 @@ selected_stations <- c(1982:2025) # :1986, 2000:2004, 2020
               aes(x = yday, y = sst_anomaly), color = my_palette[2]) +
     geom_line(data = subset(df_hw2, year %in% selected_stations), 
               aes(x = yday, y = sst_anomaly), color = my_palette[3]) +
+    geom_line(data = subset(df_hw3, year %in% selected_stations), 
+              aes(x = yday, y = sst_anomaly), color = my_palette[4]) +
     geom_hline(yintercept = 0, size = .3) +
     geom_vline(xintercept = c(121, 243), linetype = "dotted") +
     scale_x_continuous(breaks = c(1, 91, 182, 274), 
