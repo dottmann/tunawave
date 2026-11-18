@@ -1,2 +1,2 @@
 # tunawave
-Data and R code of: Prey abundance governs nonlinear warming impacts on the recruitment of a marine top predator
+Data and R code of: Prey supply regulates transient benefits of warming in a marine top predator
